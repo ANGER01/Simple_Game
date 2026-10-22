@@ -22,6 +22,8 @@ player = Player(X_MID, Y_MID)
 blocks = [pygame.Rect(X_MID + 60, Y_MID + 60, SIZE/2, SIZE/2)]
 clock = pygame.time.Clock()
 running = True
+all_visible = []
+all_visible.append(player)
 
 while running:
     # Handle events
@@ -30,9 +32,9 @@ while running:
             running = False
 
     # Get pressed keys
-    keys = pygame.key.get_pressed()
 
-    player.player_move(keys, blocks)
+
+    player.player_move(blocks)
 
     
     # Keep the square inside the window
@@ -41,7 +43,8 @@ while running:
 
     # Draw everything
     screen.fill(BLACK)
-    pygame.draw.rect(screen, WHITE, player.body)
+    for visible_object in all_visible:
+        visible_object.draw(screen)
     pygame.draw.rect(screen, RED, blocks[0])
     pygame.display.flip()
 
