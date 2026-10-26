@@ -1,5 +1,5 @@
 import pygame
-from tools import Player
+from tools import *
 
 # Initialize Pygame
 pygame.init()
@@ -18,8 +18,10 @@ X_MID = WIDTH // 2 - SIZE // 2
 Y_MID = HEIGHT // 2 - SIZE // 2
 # Square settings
 player = Player(X_MID, Y_MID)
+block = Block(X_MID + 60, Y_MID + 60)
 
-blocks = [pygame.Rect(X_MID + 60, Y_MID + 60, SIZE/2, SIZE/2)]
+blocks = []
+
 clock = pygame.time.Clock()
 running = True
 all_visible = []
@@ -34,18 +36,19 @@ while running:
     # Get pressed keys
 
 
-    player.player_move(blocks)
+    player.player_move()
 
     
     # Keep the square inside the window
-    player.body.x = max(0, min(player.body.x, WIDTH - SIZE))
-    player.body.y = max(0, min(player.body.y, HEIGHT - SIZE))
+    player.rect.x = max(0, min(player.rect.x, WIDTH - SIZE))
+    player.rect.y = max(0, min(player.rect.y, HEIGHT - SIZE))
 
     # Draw everything
     screen.fill(BLACK)
-    for visible_object in all_visible:
-        visible_object.draw(screen)
-    pygame.draw.rect(screen, RED, blocks[0])
+
+    block_group.draw(screen)
+    player_group.draw(screen)
+    
     pygame.display.flip()
 
     # Limit to 60 FPS

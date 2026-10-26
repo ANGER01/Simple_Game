@@ -1,59 +1,78 @@
 import pygame
 
- 
+player_group = pygame.sprite.Group()
+block_group = pygame.sprite.Group()
+ghost_group = pygame.sprite.Group()
 
-class Player:
+class Player(pygame.sprite.Sprite):
     def __init__(self, x, y):
-        self.body = pygame.Rect(x, y, 50 , 50)
-        self.ghost = pygame.Rect(x, y, 50 , 50)
+        pygame.sprite.Sprite.__init__(self, player_group)
+        self.image = pygame.Surface((50,50))
+        self.image.fill((255,255,255))
+        self.rect = self.image.get_rect()
+        self.rect.topleft = (x,y)
+        self.ghost = Ghost(x, y, 50, 50)
         
-    def player_move(self, hittable_objects: list=None, speed=5):
+        
+    def player_move(self, speed=5):
         keys = pygame.key.get_pressed()
         
         if keys[pygame.K_LEFT] or keys[pygame.K_a]:
-            self.ghost.x -= speed
-            ghost_collisions = self.check_collision(self.ghost, hittable_objects)
+            self.ghost.rect.x -= speed
+            ghost_collisions = self.check_collision(self.ghost)
             if ghost_collisions == 0:     
-                self.body.x -= speed
+                self.rect.x -= speed
             else:
-                self.ghost.x += speed
+                self.ghost.rect.x += speed
+
         if keys[pygame.K_RIGHT] or keys[pygame.K_d]:
-            self.ghost.x += speed
-            ghost_collisions = self.check_collision(self.ghost, hittable_objects)
+            self.ghost.rect.x += speed
+            ghost_collisions = self.check_collision(self.ghost)
             if ghost_collisions == 0:     
-                self.body.x += speed
+                self.rect.x += speed
             else:
-                self.ghost.x -= speed
+                self.ghost.rect.x -= speed
+                
         if keys[pygame.K_UP] or keys[pygame.K_w]:
-            self.ghost.y -= speed
-            ghost_collisions = self.check_collision(self.ghost, hittable_objects)
+            self.ghost.rect.y -= speed
+            ghost_collisions = self.check_collision(self.ghost)
             if ghost_collisions == 0:     
-                self.body.y -= speed
+                self.rect.y -= speed
             else:
-                self.ghost.y += speed
+                self.ghost.rect.y += speed
+                
         if keys[pygame.K_DOWN] or keys[pygame.K_s]:
-            self.ghost.y += speed
-            ghost_collisions = self.check_collision(self.ghost, hittable_objects)
+            self.ghost.rect.y += speed
+            ghost_collisions = self.check_collision(self.ghost)
             if ghost_collisions == 0:     
-                self.body.y += speed
+                self.rect.y += speed
             else:
-                self.ghost.y -= speed
+                self.ghost.rect.y -= speed
             
-    def check_collision(self, mover: pygame.Rect, all_rects: list):
-        if all_rects != None:
-            collisions = mover.collidelistall(all_rects)
+    def check_collision(self, mover: pygame.sprite.Sprite):
+        collisions = pygame.sprite.spritecollide(mover, block_group, dokill=False)
+        if collisions != None:
             return len(collisions)
         else: 
             return 0
-    
-    def draw(self, screen):
-        pygame.draw.rect(screen, (255,255,255), self.body)
-        
-    def update():
-        pass
-        
 
-
+        
+class Ghost(pygame.sprite.Sprite):
+    def __init__(self, x, y, width, heigth):
+        pygame.sprite.Sprite.__init__(self, ghost_group)
+        self.image = pygame.Surface((width,heigth))
+        self.image.fill((0,0,0))
+        self.rect = self.image.get_rect()
+        self.rect.topleft = (x, y)
+        
+class Block(pygame.sprite.Sprite):
+    def __init__(self, x, y):
+        pygame.sprite.Sprite.__init__(self, block_group)
+        self.image = pygame.Surface((25, 25))
+        self.image.fill((255,0,0))
+        self.rect = self.image.get_rect()
+        self.rect.topleft = (x, y)
+        
 
 class Attacker:
     def __init__(self, x, y):
