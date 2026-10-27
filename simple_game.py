@@ -19,6 +19,7 @@ Y_MID = HEIGHT // 2 - SIZE // 2
 # Square settings
 player = Player(X_MID, Y_MID)
 block = Block(X_MID + 60, Y_MID + 60)
+attacker = Attacker(100, 100)
 
 blocks = []
 
@@ -36,8 +37,9 @@ while running:
     # Get pressed keys
 
 
-    player.player_move()
-
+    player_group.update()
+    attacker.move_attacker()
+    attacker_group.update()
     
     # Keep the square inside the window
     player.rect.x = max(0, min(player.rect.x, WIDTH - SIZE))
@@ -46,8 +48,10 @@ while running:
     # Draw everything
     screen.fill(BLACK)
 
+    attacker_group.draw(screen)
     block_group.draw(screen)
     player_group.draw(screen)
+    enemy_projectile_group.draw(screen)
     
     pygame.display.flip()
 
