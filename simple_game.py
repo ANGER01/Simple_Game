@@ -18,7 +18,7 @@ X_MID = WIDTH // 2 - SIZE // 2
 Y_MID = HEIGHT // 2 - SIZE // 2
 # Square settings
 player = Player(X_MID, Y_MID)
-block = Block(X_MID + 60, Y_MID + 60)
+block = Block(X_MID + 60, Y_MID - 60)
 attacker = Attacker(100, 100)
 
 blocks = []
@@ -35,9 +35,12 @@ while running:
             running = False
 
     # Get pressed keys
-
+    keys = pygame.key.get_pressed()
+    if keys[pygame.K_ESCAPE]:
+        running = False
 
     player_group.update()
+    player_weapon_group.update()
     attacker.move_attacker()
     attacker_group.update()
     
@@ -52,9 +55,9 @@ while running:
     block_group.draw(screen)
     player_group.draw(screen)
     enemy_projectile_group.draw(screen)
-    
+    player_weapon_group.draw(screen)
     pygame.display.flip()
-
+    
     # Limit to 60 FPS
     clock.tick(60)
 
